@@ -1,0 +1,522 @@
+/* ============================================
+   HEADER WRAPPER - 142px total
+   ============================================ */
+
+.headerWrapper {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height: 142px;
+  background: #ffffff;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+/* ============================================
+   TOP NAVIGATION - 55px height
+   ============================================ */
+
+.topNav {
+  position: absolute;
+  height: 55px;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: #ffffff;
+  box-shadow: 0px 0px 8px rgba(51, 51, 51, 0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 312px;
+  gap: 24px;
+}
+
+/* Toggle Button */
+.categoryToggle {
+  flex-shrink: 0;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #e9e9e9;
+  border-radius: 5px;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  transition: all 0.2s ease;
+}
+
+.categoryToggle img {
+  width: 22px;
+  height: 22px;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.categoryToggle:hover {
+  border-color: #64b496;
+  background: #f9f9f9;
+}
+
+/* Navigation */
+.navWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 24px;
+}
+
+.navLink {
+  font-family: 'Poppins';
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  color: #000000;
+  text-decoration: none;
+  letter-spacing: 0.48px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+  height: 100%;
+}
+
+.navLink:hover {
+  color: #64b496;
+}
+
+.navDropdown {
+  width: 17.48px;
+  height: 15px;
+  flex-shrink: 0;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* Phone Info */
+.phoneInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.phoneIcon {
+  width: 20.48px;
+  height: 20px;
+  flex-shrink: 0;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.phoneText {
+  font-family: 'Segoe UI';
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #000000;
+  letter-spacing: 0.48px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* ============================================
+   SEARCH SECTION - 86px height
+   ============================================ */
+
+.searchSection {
+  position: absolute;
+  top: 55px;
+  left: 312px;
+  right: 312px;
+  height: 86px;
+  background: #ffffff;
+  border-bottom: 1px solid #e9e9e9;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Logo Box */
+.logoBox {
+  width: 115px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logoImg {
+  width: 82px;
+  height: 82px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brandName {
+  font-family: 'Inter';
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 18px;
+  color: #000000;
+  letter-spacing: 0.48px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.tagline {
+  font-family: 'Inter';
+  font-size: 11.98px;
+  font-weight: 600;
+  line-height: 14px;
+  color: #221f1f;
+  letter-spacing: 0.48px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* Search Box */
+.searchBox {
+  width: 600px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.searchInput {
+  flex: 1;
+  height: 100%;
+  padding: 0 16px;
+  border: 1px solid #64b496;
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+  font-family: 'Poppins';
+  font-size: 13px;
+  font-weight: 400;
+  background: #ffffff;
+  color: #000000;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.searchInput::placeholder {
+  color: #7a7a7a;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #4a9d7e;
+}
+
+.categoryDropdown {
+  width: 130px;
+  height: 43px;
+  padding: 0 13px;
+  border: 1px solid #64b496;
+  border-left: none;
+  border-right: none;
+  background: #ffffff;
+  font-family: 'Segoe UI';
+  font-size: 13px;
+  font-weight: 400;
+  color: #212529;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4L6 9L11 4' stroke='%23343A40' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.categoryDropdown:focus {
+  outline: none;
+  border-color: #4a9d7e;
+}
+
+.searchBtn {
+  width: 45px;
+  height: 100%;
+  padding: 0;
+  background: #f53e32;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  transition: background 0.2s ease;
+}
+
+.searchBtn img {
+  width: 14.48px;
+  height: 14px;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.searchBtn:hover {
+  background: #e02d21;
+}
+
+.searchBtn:active {
+  background: #c9241a;
+}
+
+/* Right Bar */
+.rightBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.actionBtn {
+  height: 39px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins';
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 15px;
+  color: #000000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  letter-spacing: 0.48px;
+  margin: 0;
+}
+
+.btnIcon {
+  width: 21.48px;
+  height: 21px;
+  flex-shrink: 0;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.actionBtn span {
+  display: inline-block;
+}
+
+.actionBtn:hover {
+  color: #64b496;
+  background: #f5f5f5;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1440px) {
+  .topNav,
+  .searchSection {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .topNav,
+  .searchSection {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+
+  .searchBox {
+    width: 400px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .topNav,
+  .searchSection {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .searchBox {
+    width: 300px;
+  }
+
+  .actionBtn span {
+    display: none;
+  }
+
+  .navItem {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .topNav {
+    padding: 0 16px;
+    gap: 8px;
+  }
+
+  .searchSection {
+    left: 0;
+    right: 0;
+    padding: 0 16px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .navLink {
+    font-size: 12px;
+  }
+
+  .phoneText {
+    display: none;
+  }
+
+  .logoBox {
+    order: 1;
+    width: 100%;
+  }
+
+  .logoText {
+    display: none;
+  }
+
+  .logoImg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .searchBox {
+    order: 3;
+    width: 100%;
+    max-width: none;
+  }
+
+  .rightBar {
+    order: 2;
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .actionBtn {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  .actionBtn span {
+    display: none;
+  }
+
+  .btnIcon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topNav {
+    padding: 0 12px;
+    height: 50px;
+  }
+
+  .navItem {
+    padding: 0 8px;
+  }
+
+  .navLink {
+    font-size: 10px;
+  }
+
+  .searchSection {
+    padding: 10px 12px;
+  }
+
+  .logoImg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .brandName {
+    font-size: 18px;
+  }
+
+  .searchBox {
+    height: 36px;
+  }
+
+  .searchInput {
+    font-size: 11px;
+    padding: 0 10px;
+  }
+
+  .categoryDropdown {
+    width: 70px;
+    height: 36px;
+  }
+
+  .searchBtn {
+    width: 36px;
+  }
+
+  .searchBtn img {
+    width: 12px;
+    height: 12px;
+  }
+}

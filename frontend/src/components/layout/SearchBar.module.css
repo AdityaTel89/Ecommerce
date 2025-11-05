@@ -1,0 +1,262 @@
+/* Search Bar Wrapper */
+.searchBarWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 86px;
+  background: #ffffff;
+  border-bottom: 1px solid #e9e9e9;
+  padding: 0 312px;
+  box-sizing: border-box;
+  gap: 24px;
+}
+
+/* Logo Section - Left */
+.logoSection {
+  flex-shrink: 0;
+  width: 115px;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logoImageWrapper {
+  position: relative;
+  width: 82px;
+  height: 82px;
+  flex-shrink: 0;
+}
+
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brandName {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 18px;
+  color: #000000;
+  letter-spacing: 0.48px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.brandTagline {
+  font-family: 'Inter', sans-serif;
+  font-size: 11.98px;
+  font-weight: 600;
+  line-height: 14px;
+  color: #221f1f;
+  letter-spacing: 0.48px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Search Container - Center */
+.searchContainer {
+  display: flex;
+  align-items: center;
+  width: 600px;
+  height: 45px;
+  flex-shrink: 1;
+  gap: 0;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px;
+  border: 1px solid #64b496;
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  background: #ffffff;
+  color: #000000;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.searchInput::placeholder {
+  color: #7a7a7a;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #4a9d7e;
+}
+
+.categorySelect {
+  width: 130px;
+  height: 43px;
+  padding: 0 13px;
+  border: 1px solid #64b496;
+  border-left: none;
+  border-right: none;
+  background: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #212529;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4L6 9L11 4' stroke='%23343A40' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  box-sizing: border-box;
+}
+
+.categorySelect:focus {
+  outline: none;
+  border-color: #4a9d7e;
+}
+
+.searchButton {
+  width: 45px;
+  height: 45px;
+  padding: 0;
+  background: #f53e32;
+  color: #ffffff;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.searchButton:hover {
+  background: #e02d21;
+}
+
+/* Right Bar - Actions */
+.rightBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Action Button */
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 15px;
+  color: #000000;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  letter-spacing: 0.48px;
+  white-space: nowrap;
+  min-height: 39px;
+  text-decoration: none;
+}
+
+.actionButton:hover {
+  color: #64b496;
+}
+
+/* Responsive Design */
+@media (max-width: 1440px) {
+  .searchBarWrapper {
+    padding: 0 200px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .searchBarWrapper {
+    padding: 0 100px;
+  }
+
+  .searchContainer {
+    width: 400px;
+  }
+
+  .actionButton span {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .searchBarWrapper {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    height: auto;
+    gap: 12px;
+  }
+
+  .logoSection {
+    order: 1;
+    width: 100%;
+  }
+
+  .searchContainer {
+    order: 3;
+    width: 100%;
+    max-width: none;
+    height: 40px;
+    margin: 12px 0;
+  }
+
+  .rightBar {
+    order: 2;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .logoText {
+    display: none;
+  }
+
+  .logoImageWrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .actionButton span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchBarWrapper {
+    padding: 10px 12px;
+  }
+
+  .logoImageWrapper {
+    width: 50px;
+    height: 50px;
+  }
+
+  .searchContainer {
+    height: 36px;
+    width: 100%;
+  }
+}
