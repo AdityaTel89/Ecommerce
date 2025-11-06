@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useAuth } from '@/app/context/AuthContext'
 
 const NAV_LINKS = [
   { label: 'Home', path: '/', dropdown: false },
@@ -27,7 +28,6 @@ export default function Header() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
   const [showAccountDropdown, setShowAccountDropdown] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const pathname = usePathname()
 
   const handleSearch = (e: React.FormEvent) => {
@@ -49,8 +49,6 @@ export default function Header() {
         onSearch={handleSearch}
         showAccountDropdown={showAccountDropdown}
         setShowAccountDropdown={setShowAccountDropdown}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
       />
     </header>
   )
@@ -111,8 +109,6 @@ interface SearchBarProps {
   onSearch: (e: React.FormEvent) => void
   showAccountDropdown: boolean
   setShowAccountDropdown: (value: boolean) => void
-  isLoggedIn: boolean
-  setIsLoggedIn: (value: boolean) => void
 }
 
 function SearchBar({ 
@@ -123,8 +119,6 @@ function SearchBar({
   onSearch,
   showAccountDropdown,
   setShowAccountDropdown,
-  isLoggedIn,
-  setIsLoggedIn
 }: SearchBarProps) {
   return (
     <div className="h-18 border-b border-gray-200 px-60 flex items-center gap-7">
@@ -187,8 +181,6 @@ function SearchBar({
         <AccountButton 
           showDropdown={showAccountDropdown}
           setShowDropdown={setShowAccountDropdown}
-          isLoggedIn={isLoggedIn}
-          setIsLoggedIn={setIsLoggedIn}
         />
         <ActionButton icon="Wishlist" label="Wishlist" href="/wishlist" />
         <ActionButton icon="Cart" label="Cart" href="/checkout" />
@@ -232,19 +224,22 @@ function ActionButton({ icon, label, href }: ActionButtonProps) {
 interface AccountButtonProps {
   showDropdown: boolean
   setShowDropdown: (value: boolean) => void
-  isLoggedIn: boolean
-  setIsLoggedIn: (value: boolean) => void
 }
 
-function AccountButton({ showDropdown, setShowDropdown, isLoggedIn, setIsLoggedIn }: AccountButtonProps) {
+function AccountButton({ showDropdown, setShowDropdown }: AccountButtonProps) {
+  const router = useRouter()
+  const { isAuthenticated, logout } = useAuth()
+
+  // ✅ Handle logout
   const handleLogout = () => {
-    setIsLoggedIn(false)
+    logout()
     setShowDropdown(false)
-    // Add your logout logic here (clear tokens, etc.)
+    router.push('/login')
   }
 
   return (
     <div className="relative">
+      {/* ✅ Same UI - just "Account" label */}
       <button 
         onClick={() => setShowDropdown(!showDropdown)}
         className="h-8 px-2 flex items-center gap-1.5 text-black hover:text-primary hover:bg-gray-50 rounded transition-all"
@@ -256,7 +251,7 @@ function AccountButton({ showDropdown, setShowDropdown, isLoggedIn, setIsLoggedI
       {/* Dropdown Menu */}
       {showDropdown && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
               <Link
                 href="/profile"
@@ -280,6 +275,8 @@ function AccountButton({ showDropdown, setShowDropdown, isLoggedIn, setIsLoggedI
                 Wishlist
               </Link>
               <div className="border-t border-gray-200 my-2"></div>
+              
+              {/* ✅ Logout button */}
               <button
                 onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"

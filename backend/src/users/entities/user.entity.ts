@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Order } from '../../orders/entities/order.entity';
 
 @Entity('users')
@@ -12,26 +19,23 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
-  otp: string;
+  @Column({ nullable: true, type: 'varchar', length: 100 })
+  firstName?: string;
 
-  @Column({ nullable: true, type: 'timestamp' })
-  otpExpiry: Date;
+  @Column({ nullable: true, type: 'varchar', length: 100 })
+  lastName?: string;
+
+  @Column({ nullable: true, type: 'varchar', length: 6 })
+  otp?: string | null;  // ✅ Allow null
+
+  @Column({ type: 'timestamp', nullable: true })
+  otpExpiry?: Date | null;  // ✅ Allow null
 
   @Column({ default: false })
   isEmailVerified: boolean;
 
-  @Column({ nullable: true })
-  firstName: string;
-
-  @Column({ nullable: true })
-  lastName: string;
-
-  @Column({ nullable: true })
-  phone: string;
-
-  @Column({ nullable: true })
-  address: string;
+  @Column({ default: true })
+  isActive: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -39,6 +43,6 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Order, (order: Order) => order.user)
+  @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 }

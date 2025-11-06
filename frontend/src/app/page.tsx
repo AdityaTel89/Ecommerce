@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
+import { useAuth } from './context/AuthContext'
 
 // ==================== HERO SECTION ====================
 function HeroSection() {
@@ -885,9 +887,10 @@ function FeatureCard({ feature }: FeatureCardProps) {
 }
 
 // ==================== MAIN HOME PAGE ====================
+// ✅ WRAPPED WITH PROTECTED ROUTE
 export default function Home() {
   return (
-    <>
+    <ProtectedRoute>
       <Header />
       <main>
         <HeroSection />
@@ -899,6 +902,6 @@ export default function Home() {
         <FeaturesSection />
       </main>
       <Footer />
-    </>
+    </ProtectedRoute>
   )
 }

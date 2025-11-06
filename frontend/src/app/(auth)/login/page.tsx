@@ -1,48 +1,65 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/app/context/AuthContext'
+
+const API_BASE_URL = 'http://localhost:3001'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { isAuthenticated, isLoading } = useAuth()
   const [email, setEmail] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [formIsLoading, setFormIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
+  // ✅ Redirect if already logged in
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.push('/')
+    }
+  }, [isAuthenticated, isLoading, router])
+
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!email) {
+      setError('Please enter your email')
+      return
+    }
+
     setError('')
-    setIsLoading(true)
+    setFormIsLoading(true)
 
     try {
-      const response = await fetch('/api/auth/send-otp', {
+      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       })
 
       if (!response.ok) {
-        throw new Error('Failed to send OTP')
+        const data = await response.json()
+        throw new Error(data.message || 'Failed to send OTP')
       }
 
       setSuccess(true)
       setTimeout(() => {
         router.push(`/verify-otp?email=${encodeURIComponent(email)}`)
-      }, 1500)
+      }, 1000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send OTP. Please try again.')
     } finally {
-      setIsLoading(false)
+      setFormIsLoading(false)
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md">
-        {/* Logo Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center gap-2 mb-4">
             <Image
@@ -59,9 +76,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-lg p-8">
-          {/* Header */}
           <div className="mb-8">
             <h2 className="font-quicksand font-bold text-2xl text-[#253D4E] mb-2">
               Welcome Back
@@ -71,7 +86,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Success Message */}
           {success && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
               <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -90,7 +104,6 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
               <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -109,9 +122,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Login Form */}
           <form onSubmit={handleSendOTP} className="space-y-6">
-            {/* Email Input */}
             <div>
               <label className="block font-poppins text-sm font-medium text-gray-700 mb-2">
                 Email Address
@@ -122,7 +133,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                disabled={isLoading}
+                disabled={formIsLoading}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed"
               />
               <p className="font-poppins text-xs text-gray-500 mt-1.5">
@@ -130,13 +141,12 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading || success || !email}
+              disabled={formIsLoading || success || !email}
               className="w-full bg-accent hover:bg-red-600 disabled:bg-gray-400 text-white font-quicksand font-bold py-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
             >
-              {isLoading ? (
+              {formIsLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Sending OTP...</span>
@@ -154,7 +164,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Signup Link */}
           <p className="text-center mt-8 font-poppins text-sm text-gray-600">
             Don't have an account?{' '}
             <Link
@@ -166,7 +175,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Footer Note */}
         <p className="text-center mt-6 font-poppins text-xs text-gray-500">
           By signing in, you agree to our{' '}
           <Link href="#" className="text-primary hover:underline">

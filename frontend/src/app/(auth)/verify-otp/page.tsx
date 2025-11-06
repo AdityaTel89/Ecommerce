@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
+const API_BASE_URL = 'http://localhost:3001'
+
 export default function VerifyOTPPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -14,29 +16,22 @@ export default function VerifyOTPPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(300) // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(300)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
-  // Timer countdown
   useEffect(() => {
     if (timeLeft <= 0) return
-
     const timer = setInterval(() => {
       setTimeLeft(prev => prev - 1)
     }, 1000)
-
     return () => clearInterval(timer)
   }, [timeLeft])
 
   const handleOTPChange = (index: number, value: string) => {
     if (value.length > 1) return
-
     const newOtp = [...otp]
     newOtp[index] = value
-
     setOtp(newOtp)
-
-    // Auto focus to next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus()
     }
@@ -61,21 +56,32 @@ export default function VerifyOTPPage() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/auth/verify-otp', {
+      const verifyResponse = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp: otpCode }),
       })
 
-      if (!response.ok) {
-        throw new Error('Invalid OTP. Please try again.')
+      if (!verifyResponse.ok) {
+        const data = await verifyResponse.json()
+        throw new Error(data.message || 'Invalid OTP. Please try again.')
       }
 
+      const data = await verifyResponse.json()
+
+      // ✅ Store JWT token in localStorage
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+
       setSuccess(true)
-      // Redirect to dashboard
+
+      // ✅ Wait a bit longer to allow AuthContext to update
+      // Then redirect to home
       setTimeout(() => {
-        router.push('/app')
-      }, 1500)
+        // Dispatch storage event to notify AuthContext
+        window.dispatchEvent(new Event('storage'))
+        router.push('/')
+      }, 500)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to verify OTP')
     } finally {
@@ -85,7 +91,7 @@ export default function VerifyOTPPage() {
 
   const handleResendOTP = async () => {
     try {
-      const response = await fetch('/api/auth/send-otp', {
+      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -111,7 +117,6 @@ export default function VerifyOTPPage() {
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md">
-        {/* Logo Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center gap-2 mb-4">
             <Image
@@ -128,9 +133,7 @@ export default function VerifyOTPPage() {
           </p>
         </div>
 
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-lg p-8">
-          {/* Header */}
           <div className="mb-8">
             <h2 className="font-quicksand font-bold text-2xl text-[#253D4E] mb-2">
               Enter OTP
@@ -141,7 +144,6 @@ export default function VerifyOTPPage() {
             </p>
           </div>
 
-          {/* Success Message */}
           {success && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
               <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -151,16 +153,15 @@ export default function VerifyOTPPage() {
               </div>
               <div>
                 <p className="font-poppins font-semibold text-sm text-green-800">
-                  Email verified!
+                  Verified successfully!
                 </p>
                 <p className="font-poppins text-xs text-green-700">
-                  Redirecting...
+                  Redirecting to home...
                 </p>
               </div>
             </div>
           )}
 
-          {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
               <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -179,9 +180,7 @@ export default function VerifyOTPPage() {
             </div>
           )}
 
-          {/* OTP Form */}
           <form onSubmit={handleVerifyOTP} className="space-y-6">
-            {/* OTP Input Boxes */}
             <div>
               <label className="block font-poppins text-sm font-medium text-gray-700 mb-4">
                 Enter 6-digit code
@@ -206,7 +205,6 @@ export default function VerifyOTPPage() {
               </div>
             </div>
 
-            {/* Timer */}
             <div className="flex items-center justify-center gap-2">
               <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00-.293.707l-1.414 1.414a1 1 0 101.414 1.414l2-2A1 1 0 0011 9.414V6z" clipRule="evenodd" />
@@ -218,7 +216,6 @@ export default function VerifyOTPPage() {
               </span>
             </div>
 
-            {/* Verify Button */}
             <button
               type="submit"
               disabled={isLoading || success}
@@ -242,7 +239,6 @@ export default function VerifyOTPPage() {
             </button>
           </form>
 
-          {/* Resend OTP */}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg text-center">
             <p className="font-poppins text-sm text-gray-600">
               Didn't receive the code?{' '}
@@ -257,7 +253,6 @@ export default function VerifyOTPPage() {
             </p>
           </div>
 
-          {/* Back to Login */}
           <p className="text-center mt-6 font-poppins text-sm text-gray-600">
             <Link
               href="/login"
