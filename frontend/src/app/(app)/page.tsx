@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
+import Link from 'next/link'
 
 // ==================== HERO SECTION ====================
 function HeroSection() {
@@ -885,20 +884,16 @@ function FeatureCard({ feature }: FeatureCardProps) {
 }
 
 // ==================== MAIN HOME PAGE ====================
-export default function Home() {
+export default function HomePage() {
   return (
-    <>
-      <Header />
-      <main>
-        <HeroSection />
-        <BannerSection />
-        <ProductsSection />
-        <DailyBestSells />
-        <DealsOfTheDay />
-        <FooterBanner />
-        <FeaturesSection />
-      </main>
-      <Footer />
-    </>
+    <main>
+      <HeroSection />
+      <BannerSection />
+      <ProductsSection />
+      <DailyBestSells />
+      <DealsOfTheDay />
+      <FooterBanner />
+      <FeaturesSection />
+    </main>
   )
 }

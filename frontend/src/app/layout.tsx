@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import type { Metadata } from 'next'
 import './globals.css'
 
@@ -14,8 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
-        {children}
+      <body className="w-full overflow-x-hidden">
+     
+        <main className="w-full min-h-screen">{children}</main>
+      
       </body>
     </html>
   )

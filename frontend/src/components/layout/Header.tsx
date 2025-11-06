@@ -3,14 +3,15 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 const NAV_LINKS = [
-  { label: 'Home', dropdown: false },
-  { label: 'Category', dropdown: true },
-  { label: 'Products', dropdown: true },
-  { label: 'Pages', dropdown: true },
-  { label: 'Blog', dropdown: true },
-  { label: 'Elements', dropdown: true },
+  { label: 'Home', path: '/', dropdown: false },
+  { label: 'Category', path: '/category', dropdown: true },
+  { label: 'Products', path: '/products', dropdown: true },
+  { label: 'Pages', path: '/pages', dropdown: true },
+  { label: 'Blog', path: '/blog', dropdown: true },
+  { label: 'Elements', path: '/elements', dropdown: true },
 ]
 
 const CATEGORIES = [
@@ -25,6 +26,9 @@ const CATEGORIES = [
 export default function Header() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const pathname = usePathname()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,7 +38,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white">
       {/* Top Bar */}
-      <TopBar />
+      <TopBar pathname={pathname} />
 
       {/* Search Bar */}
       <SearchBar
@@ -43,12 +47,20 @@ export default function Header() {
         category={category}
         setCategory={setCategory}
         onSearch={handleSearch}
+        showAccountDropdown={showAccountDropdown}
+        setShowAccountDropdown={setShowAccountDropdown}
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
       />
     </header>
   )
 }
 
-function TopBar() {
+interface TopBarProps {
+  pathname: string
+}
+
+function TopBar({ pathname }: TopBarProps) {
   return (
     <div className="h-14 border-b border-gray-200 px-60 flex items-center justify-between">
       {/* Menu Toggle */}
@@ -59,19 +71,26 @@ function TopBar() {
       {/* Navigation - Centered */}
       <nav className="flex-1 flex justify-center">
         <ul className="flex items-center">
-          {NAV_LINKS.map(({ label, dropdown }) => (
-            <li key={label} className="relative group">
-              <Link
-                href={`/${label.toLowerCase()}`}
-                className="px-4 py-3.5 text-sm font-medium text-black hover:text-primary transition-colors flex items-center gap-2.5 whitespace-nowrap"
-              >
-                {label}
-                {dropdown && (
-                  <img src="/assets/icons/DropDown.png" alt="" className="w-2.5 h-1.5" />
-                )}
-              </Link>
-            </li>
-          ))}
+          {NAV_LINKS.map(({ label, path, dropdown }) => {
+            const isActive = pathname === path
+            return (
+              <li key={label} className="relative group">
+                <Link
+                  href={path}
+                  className={`px-4 py-3.5 text-sm font-medium transition-colors flex items-center gap-2.5 whitespace-nowrap ${
+                    isActive
+                      ? 'text-primary border-b-2 border-primary'
+                      : 'text-black hover:text-primary'
+                  }`}
+                >
+                  {label}
+                  {dropdown && (
+                    <img src="/assets/icons/DropDown.png" alt="" className="w-2.5 h-1.5" />
+                  )}
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       </nav>
 
@@ -90,9 +109,23 @@ interface SearchBarProps {
   category: string
   setCategory: (value: string) => void
   onSearch: (e: React.FormEvent) => void
+  showAccountDropdown: boolean
+  setShowAccountDropdown: (value: boolean) => void
+  isLoggedIn: boolean
+  setIsLoggedIn: (value: boolean) => void
 }
 
-function SearchBar({ search, setSearch, category, setCategory, onSearch }: SearchBarProps) {
+function SearchBar({ 
+  search, 
+  setSearch, 
+  category, 
+  setCategory, 
+  onSearch,
+  showAccountDropdown,
+  setShowAccountDropdown,
+  isLoggedIn,
+  setIsLoggedIn
+}: SearchBarProps) {
   return (
     <div className="h-18 border-b border-gray-200 px-60 flex items-center gap-7">
       {/* Logo */}
@@ -120,7 +153,7 @@ function SearchBar({ search, setSearch, category, setCategory, onSearch }: Searc
           placeholder="Search For Items..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 h-full px-4 border  border-primary rounded-l text-sm bg-white text-black placeholder-gray-500 focus:outline-none"
+          className="flex-1 h-full px-4 border border-primary rounded-l text-sm bg-white text-black placeholder-gray-500 focus:outline-none"
         />
         <div className="relative h-full">
           <select
@@ -151,9 +184,14 @@ function SearchBar({ search, setSearch, category, setCategory, onSearch }: Searc
 
       {/* Actions */}
       <div className="flex items-center gap-0 ml-2">
-        <ActionButton icon="Account" label="Account" />
-        <ActionButton icon="Wishlist" label="Wishlist" />
-        <ActionButton icon="Cart" label="Cart" />
+        <AccountButton 
+          showDropdown={showAccountDropdown}
+          setShowDropdown={setShowAccountDropdown}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+        />
+        <ActionButton icon="Wishlist" label="Wishlist" href="/wishlist" />
+        <ActionButton icon="Cart" label="Cart" href="/checkout" />
       </div>
     </div>
   )
@@ -162,16 +200,113 @@ function SearchBar({ search, setSearch, category, setCategory, onSearch }: Searc
 interface ActionButtonProps {
   icon: string
   label: string
+  href?: string
 }
 
-function ActionButton({ icon, label }: ActionButtonProps) {
-  return (
-    <button className="h-8 px-2 flex items-center gap-1.5 text-black hover:text-primary hover:bg-gray-50 rounded transition-all">
+function ActionButton({ icon, label, href }: ActionButtonProps) {
+  const content = (
+    <>
       <img src={`/assets/icons/${icon}.png`} alt="" className="w-3 h-3" />
       <span className="text-xs font-small hidden lg:inline">{label}</span>
+    </>
+  )
+
+  if (href) {
+    return (
+      <Link 
+        href={href}
+        className="h-8 px-2 flex items-center gap-1.5 text-black hover:text-primary hover:bg-gray-50 rounded transition-all"
+      >
+        {content}
+      </Link>
+    )
+  }
+
+  return (
+    <button className="h-8 px-2 flex items-center gap-1.5 text-black hover:text-primary hover:bg-gray-50 rounded transition-all">
+      {content}
     </button>
   )
 }
 
+interface AccountButtonProps {
+  showDropdown: boolean
+  setShowDropdown: (value: boolean) => void
+  isLoggedIn: boolean
+  setIsLoggedIn: (value: boolean) => void
+}
 
+function AccountButton({ showDropdown, setShowDropdown, isLoggedIn, setIsLoggedIn }: AccountButtonProps) {
+  const handleLogout = () => {
+    setIsLoggedIn(false)
+    setShowDropdown(false)
+    // Add your logout logic here (clear tokens, etc.)
+  }
 
+  return (
+    <div className="relative">
+      <button 
+        onClick={() => setShowDropdown(!showDropdown)}
+        className="h-8 px-2 flex items-center gap-1.5 text-black hover:text-primary hover:bg-gray-50 rounded transition-all"
+      >
+        <img src="/assets/icons/Account.png" alt="" className="w-3 h-3" />
+        <span className="text-xs font-small hidden lg:inline">Account</span>
+      </button>
+
+      {/* Dropdown Menu */}
+      {showDropdown && (
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+          {isLoggedIn ? (
+            <>
+              <Link
+                href="/profile"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                onClick={() => setShowDropdown(false)}
+              >
+                My Profile
+              </Link>
+              <Link
+                href="/orders"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                onClick={() => setShowDropdown(false)}
+              >
+                My Orders
+              </Link>
+              <Link
+                href="/wishlist"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                onClick={() => setShowDropdown(false)}
+              >
+                Wishlist
+              </Link>
+              <div className="border-t border-gray-200 my-2"></div>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                onClick={() => setShowDropdown(false)}
+              >
+                Login
+              </Link>
+              <Link
+                href="/signup"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                onClick={() => setShowDropdown(false)}
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
