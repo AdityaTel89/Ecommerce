@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/context/AuthContext'
 
-const API_BASE_URL = 'http://localhost:3001'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -21,7 +21,6 @@ export default function SignupPage() {
   const [success, setSuccess] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
-  // ✅ Redirect if already logged in
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
       router.push('/')
@@ -30,21 +29,13 @@ export default function SignupPage() {
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {}
-
-    if (!formData.firstName.trim()) {
-      errors.firstName = 'First name is required'
-    }
-
-    if (!formData.lastName.trim()) {
-      errors.lastName = 'Last name is required'
-    }
-
+    if (!formData.firstName.trim()) errors.firstName = 'First name is required'
+    if (!formData.lastName.trim()) errors.lastName = 'Last name is required'
     if (!formData.email.trim()) {
       errors.email = 'Email is required'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = 'Please enter a valid email'
     }
-
     setFieldErrors(errors)
     return Object.keys(errors).length === 0
   }
@@ -64,12 +55,8 @@ export default function SignupPage() {
   }
 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!validateForm()) {
-      return
-    }
-
+    e.preventDefault() 
+    if (!validateForm()) return
     setError('')
     setIsLoadingForm(true)
 
@@ -77,22 +64,19 @@ export default function SignupPage() {
       const response = await fetch(`${API_BASE_URL}/auth/signup-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-        }),
+        body: JSON.stringify(formData),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        const data = await response.json()
         throw new Error(data.message || 'Failed to create account')
       }
 
       setSuccess(true)
-      
+      // Redirect with email and the OTP so the verify page can autofill
       setTimeout(() => {
-        router.push(`/verify-otp?email=${encodeURIComponent(formData.email)}`)
+        router.push(`/verify-otp?email=${encodeURIComponent(formData.email)}&otp=${data.otp}`)
       }, 1000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create account. Please try again.')
@@ -119,7 +103,6 @@ export default function SignupPage() {
             A Treasure of Tastes
           </p>
         </div>
-
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <div className="mb-8">
             <h2 className="font-quicksand font-bold text-2xl text-[#253D4E] mb-2">
@@ -129,7 +112,6 @@ export default function SignupPage() {
               Join us and start shopping delicious food
             </p>
           </div>
-
           {success && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
               <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -147,7 +129,6 @@ export default function SignupPage() {
               </div>
             </div>
           )}
-
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
               <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -165,7 +146,6 @@ export default function SignupPage() {
               </div>
             </div>
           )}
-
           <form onSubmit={handleSignup} className="space-y-5">
             <div>
               <label className="block font-poppins text-sm font-medium text-gray-700 mb-2">
@@ -178,15 +158,12 @@ export default function SignupPage() {
                 onChange={handleInputChange}
                 placeholder="Enter your first name"
                 disabled={isLoadingForm}
-                className={`w-full px-4 py-3 border rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${
-                  fieldErrors.firstName ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${fieldErrors.firstName ? 'border-red-500' : 'border-gray-300'}`}
               />
               {fieldErrors.firstName && (
                 <p className="font-poppins text-xs text-red-500 mt-1.5">{fieldErrors.firstName}</p>
               )}
             </div>
-
             <div>
               <label className="block font-poppins text-sm font-medium text-gray-700 mb-2">
                 Last Name
@@ -198,15 +175,12 @@ export default function SignupPage() {
                 onChange={handleInputChange}
                 placeholder="Enter your last name"
                 disabled={isLoadingForm}
-                className={`w-full px-4 py-3 border rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${
-                  fieldErrors.lastName ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${fieldErrors.lastName ? 'border-red-500' : 'border-gray-300'}`}
               />
               {fieldErrors.lastName && (
                 <p className="font-poppins text-xs text-red-500 mt-1.5">{fieldErrors.lastName}</p>
               )}
             </div>
-
             <div>
               <label className="block font-poppins text-sm font-medium text-gray-700 mb-2">
                 Email Address
@@ -218,15 +192,12 @@ export default function SignupPage() {
                 onChange={handleInputChange}
                 placeholder="Enter your email"
                 disabled={isLoadingForm}
-                className={`w-full px-4 py-3 border rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${
-                  fieldErrors.email ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'}`}
               />
               {fieldErrors.email && (
                 <p className="font-poppins text-xs text-red-500 mt-1.5">{fieldErrors.email}</p>
               )}
             </div>
-
             <button
               type="submit"
               disabled={isLoadingForm || success}
@@ -249,7 +220,6 @@ export default function SignupPage() {
               )}
             </button>
           </form>
-
           <p className="text-center mt-8 font-poppins text-sm text-gray-600">
             Already have an account?{' '}
             <Link
@@ -260,7 +230,6 @@ export default function SignupPage() {
             </Link>
           </p>
         </div>
-
         <p className="text-center mt-6 font-poppins text-xs text-gray-500">
           By signing up, you agree to our{' '}
           <Link href="#" className="text-primary hover:underline">

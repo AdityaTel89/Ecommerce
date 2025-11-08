@@ -1,36 +1,60 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { ProductsModule } from './products/products.module';
-import { OrdersModule } from './orders/orders.module';
-import { EmailModule } from './email/email.module';
+import { Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { User } from './database/entities/user.entity'
+import { Product } from './database/entities/product.entity'
+import { Order } from './database/entities/order.entity'
+import { OrderItem } from './database/entities/orderItem.entity'
+import { AuthModule } from './auth/auth.module'
+import { EmailModule } from './email/email.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
     TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DATABASE_HOST'),
-        port: configService.get('DATABASE_PORT'),
-        username: configService.get('DATABASE_USER'),
-        password: configService.get('DATABASE_PASSWORD'),
-        database: configService.get('DATABASE_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
-        logging: false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get('DATABASE_URL')
+        const nodeEnv = configService.get('NODE_ENV', 'development')
+        
+        if (!databaseUrl) {
+          throw new Error('❌ DATABASE_URL environment variable is not set')
+        }
+
+        console.log(`🔍 Connecting to database in ${nodeEnv} mode`)
+        console.log(`🔗 Database URL: ${databaseUrl.substring(0, 20)}...`)
+
+        return {
+          type: 'postgres',
+          url: databaseUrl,
+          entities: [User, Product, Order, OrderItem],
+          
+          // ✅ TEMPORARY: Enable synchronize to create tables
+          synchronize: true,  // Change this back to nodeEnv !== 'production' after first deploy
+          
+          ssl: nodeEnv === 'production' ? {
+            rejectUnauthorized: false,
+          } : false,
+          
+          logging: nodeEnv !== 'production' ? ['error', 'warn', 'query'] : ['error'],
+          
+          retryAttempts: 10,
+          retryDelay: 3000,
+          
+          extra: {
+            max: 10,
+            min: 2,
+            idleTimeoutMillis: 30000,
+          },
+        }
+      },
     }),
     AuthModule,
-    UsersModule,
-    ProductsModule,
-    OrdersModule,
     EmailModule,
   ],
 })
