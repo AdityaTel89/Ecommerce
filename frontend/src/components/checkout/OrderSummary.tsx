@@ -22,7 +22,7 @@ interface OrderSummaryProps {
 const DEFAULT_ITEMS: CartItem[] = [
   {
     id: 1,
-    image: '/Assets/images/product10.jpg',
+    image: '/assets/images/product10.jpg',
     title: 'Dates Value Pack Pouch',
     rating: 5,
     price: 120.25,
@@ -30,7 +30,7 @@ const DEFAULT_ITEMS: CartItem[] = [
   },
   {
     id: 2,
-    image: '/Assets/images/product12.jpg',
+    image: '/assets/images/product12.jpg',
     title: 'Smoked Honey Spiced Nuts',
     rating: 5,
     price: 120.25,
@@ -238,7 +238,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
         </h3>
         <div className="">
           <Image
-            src="/Assets/images/Payment.png"
+            src="/assets/images/Payment.png"
             alt="Visa"
             width={280}
             height={25}

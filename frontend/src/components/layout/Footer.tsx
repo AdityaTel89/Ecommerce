@@ -36,7 +36,7 @@ export default function Footer() {
               <div className="flex gap-3 items-start">
                 <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center mt-0.5">
                   <Image
-                    src="/Assets/icons/Location.png"
+                    src="/assets/icons/Location.png"
                     alt="Location"
                     width={16}
                     height={16}
@@ -53,7 +53,7 @@ export default function Footer() {
               <div className="flex gap-3 items-center">
                 <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
                   <Image
-                    src="/Assets/icons/Mail.png"
+                    src="/assets/icons/Mail.png"
                     alt="Email"
                     width={16}
                     height={16}
@@ -72,7 +72,7 @@ export default function Footer() {
               <div className="flex gap-3 items-center">
                 <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
                   <Image
-                    src="/Assets/icons/Phone1.png"
+                    src="/assets/icons/Phone1.png"
                     alt="Phone"
                     width={16}
                     height={16}
@@ -150,7 +150,7 @@ export default function Footer() {
                 className="bg-white border border-[#E9E9E9] rounded-r-md px-2 py-2 transition-colors flex items-center justify-center hover:bg-gray-100"
               >
                 <Image
-                  src="/Assets/icons/sender.png"
+                  src="/assets/icons/Sender.png"
                   alt="sender"
                   width={14}
                   height={14}
@@ -162,10 +162,10 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex gap-3 pt-4">
               {[
-                { src: '/Assets/icons/Facebook.png', label: 'Facebook', href: '#' },
-                { src: '/Assets/icons/X.png', label: 'Twitter', href: '#' },
-                { src: '/Assets/icons/Earth.png', label: 'Google', href: '#' },
-                { src: '/Assets/icons/Instagram.png', label: 'Instagram', href: '#' },
+                { src: '/assets/icons/Facebook.png', label: 'Facebook', href: '#' },
+                { src: '/assets/icons/X.png', label: 'Twitter', href: '#' },
+                { src: '/assets/icons/Earth.png', label: 'Google', href: '#' },
+                { src: '/assets/icons/Instagram.png', label: 'Instagram', href: '#' },
               ].map((social) => (
                 <a
                   key={social.label}

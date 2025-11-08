@@ -21,7 +21,7 @@ interface PopularProductsProps {
 const DEFAULT_PRODUCTS: Product[] = [
   {
     id: 1,
-    image: '/Assets/images/product1.jpg',
+    image: '/assets/images/product1.jpg',
     category: 'Snacks',
     title: 'Best snakes with hazel nut mix pack 200gm',
     rating: 5,
@@ -30,7 +30,7 @@ const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     id: 2,
-    image: '/Assets/images/product2.jpg',
+    image: '/assets/images/product2.jpg',
     category: 'Snacks',
     title: 'Sweet snakes crunchy nut mix 250gm pack',
     rating: 4,
@@ -39,7 +39,7 @@ const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     id: 3,
-    image: '/Assets/images/product3.jpg',
+    image: '/assets/images/product3.jpg',
     category: 'Snacks',
     title: 'Best snakes with hazel nut mix pack 200gm',
     rating: 5,
@@ -48,7 +48,7 @@ const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     id: 4,
-    image: '/Assets/images/product4.jpg',
+    image: '/assets/images/product4.jpg',
     category: 'Snacks',
     title: 'Sweet snakes crunchy nut mix 250gm pack',
     rating: 4,

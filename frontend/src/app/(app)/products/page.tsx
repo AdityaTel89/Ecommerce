@@ -26,7 +26,7 @@ export default function ProductsPage() {
   }
 
   const productData = {
-    productImage: '/Assets/images/quinoa.jpg',
+    productImage: '/assets/images/quinoa.jpg',
     productTitle: 'Seeds Of Change Oraganic Quinoa, Brown',
     productDescription:
       'Premium organic quinoa sourced from certified sustainable farms. Rich in protein, fiber, and essential amino acids. Perfect for a healthy diet.',
